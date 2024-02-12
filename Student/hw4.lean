@@ -53,6 +53,7 @@ Then id is the identity element for op
 -- "structure" for defining a data type with just single constructor
 -- "mk" is the default name of the constructor
 -- can access the attributes using my_monoid.op, my_monoid.id, etc. like OOD
+-- each line is a parameter (op, id, left_id, right_id)
 structure my_monoid (α : Type) where
 (op : α → α → α)
 (id : α)
