@@ -75,7 +75,6 @@ def nat_add_monoid' : my_monoid Nat :=
     λ a => by simp [Nat.add],
     λ a => by simp [Nat.add],
     _,
-    _,
     _
   )
 

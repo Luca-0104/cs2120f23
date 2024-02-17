@@ -37,6 +37,25 @@ use #eval to give examples of applying these
 functions to a few arguments.
 -/
 
+def box_map {α β : Type} : (α → β) → Box α → Box β
+| f, Box.contents a => Box.contents (f a)
+
+#reduce box_map Nat.succ (Box.contents 1)
+#reduce box_map Nat.succ (Box.contents 2)
+
+
+def tree_map {α β : Type} : (α → β) → Tree α → Tree β
+| f, Tree.empty => Tree.empty
+| f, (Tree.node a l r) => Tree.node (f a) (tree_map f l) (tree_map f r)
+
+/-!
+        1
+    2       3
+ e   e    e   e
+-/
+def this_is_a_tree := Tree.node 1 (Tree.node 2 Tree.empty Tree.empty) (Tree.node 3 Tree.empty Tree.empty)
+#reduce tree_map Nat.succ this_is_a_tree
+#reduce tree_map Nat.succ Tree.empty
 
 
 /-!
