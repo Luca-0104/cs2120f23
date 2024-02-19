@@ -174,26 +174,6 @@ Option, Box, and Tree values using <$> notation.
 
 
 
-
-/-!
- ------------------------ Lecture notes from here ------------------------------------------------
--/
-
-class functor'' (c : Type → Type) where
-map {α β : Type} (f : α → β) (ic : c α) : c β
-
-def list_functor'' : functor'' List := functor''.mk list_map
-def option_functor'' : functor'' Option := functor''.mk option_map
-
-def do_map' {α β : Type} {c : Type → Type} (m : functor'' c) :
-  (f : α → β) → c α → c β
-| f, c => m.map f c
-
-
-#eval do_map' list_functor'' Nat.succ [1,2,3]  -- [2, 3, 4]
-#eval do_map' option_functor'' (λ s => s ++ "!") (some "Hi")
-
-
 /-!
   For test, please ignore
 -/
