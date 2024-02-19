@@ -155,6 +155,8 @@ def a_tree := Tree.node 1 (Tree.node 2 Tree.empty Tree.empty) (Tree.node 3 Tree.
 polymorphism in the type of the container
 -/
 
+-- functor is a new Type with the functionality of converting a container of α
+-- to a container of β. The container can be chosen by user, like List, Tree, Option, etc.
 structure functor {α β : Type} (c : Type → Type) : Type where
 map (f : α → β) (ic : c α) : c β
 
@@ -162,6 +164,7 @@ def list_functor {α β : Type} : @functor α β List := functor.mk list_map
 def option_functor {α β : Type} : @functor α β Option := functor.mk option_map
 #check (@list_functor)
 
+-- convert encapsulates the functor, adding the map function.
 def convert {α β : Type} (c : Type → Type) (m : @functor α β c) : (f : α → β) → c α → c β
 | f, c => m.map f c
 
