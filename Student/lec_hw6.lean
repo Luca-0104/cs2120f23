@@ -69,8 +69,8 @@ We'll see them shortly. For now the definition
 follows has everything we need.
 -/
 
-structure functor (c : Type → Type) where
-map {α β : Type} (f : α → β) (ic : c α) : c β
+-- structure functor (c : Type → Type) where
+-- map {α β : Type} (f : α → β) (ic : c α) : c β
 
 /-!
 Here are functor *instances* for the polymorphic
@@ -88,9 +88,9 @@ the same as the functor field value, functor.map.
 Hint: See the "convert" function from class.
 -/
 
-def do_map {α β : Type} {c : Type → Type} (m : functor c) :
-  (f : α → β) → c α → c β
-| f, c => m.map f c
+-- def do_map {α β : Type} {c : Type → Type} (m : functor c) :
+--   (f : α → β) → c α → c β
+-- | f, c => m.map f c
 
 -- These test cases should succeed when do_map is right
 #eval do_map list_functor Nat.succ [1,2,3]  -- [2, 3, 4]
@@ -177,8 +177,12 @@ Option, Box, and Tree values using <$> notation.
  ------------------------ Lecture notes from here ------------------------------------------------
 -/
 
-class functor'' (c : Type → Type) where
+class functor (c : Type → Type) where
 map {α β : Type} (f : α → β) (ic : c α) : c β
+
+structure functor'' (c : Type → Type) where
+map {α β : Type} (f : α → β) (ic : c α) : c β
+
 
 def list_functor'' : functor'' List := functor''.mk list_map
 def option_functor'' : functor'' Option := functor''.mk option_map
@@ -190,3 +194,34 @@ def do_map' {α β : Type} {c : Type → Type} (m : functor'' c) :
 
 #eval do_map' list_functor'' Nat.succ [1,2,3]  -- [2, 3, 4]
 #eval do_map' option_functor'' (λ s => s ++ "!") (some "Hi")
+
+
+def do_map {α β : Type} {c : Type → Type} [m : functor c] :
+  (f : α → β) → c α → c β
+| f, c => m.map f c
+
+-- problems
+#reduce do_map Nat.succ [1, 2, 3]
+#reduce do_map Nat.succ (Box.contents 1)
+
+-- we need to register typeclass instances
+instance : functor List := ⟨ list_map ⟩
+instance : functor Box := ⟨ box_map ⟩
+instance : functor Option := ⟨ option_map ⟩
+
+
+#reduce do_map Nat.succ [1, 2, 3]
+#reduce do_map Nat.succ (Box.contents 3)
+#reduce do_map Nat.succ (some 3)
+
+
+infix:50 " <$> " => do_map
+#reduce Nat.succ <$> (Box.contents 1)
+
+
+-- delete `infix:50 " <$> " => do_map`, this will work
+#reduce Nat.succ <$> [1, 2, 3]
+#reduce do_map Nat.succ [1, 2, 3]
+
+
+#reduce Functor.map Nat.succ [1, 2, 3]
