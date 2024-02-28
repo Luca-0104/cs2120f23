@@ -377,6 +377,20 @@ class VAdd (G : Type u) (P : Type v) : Type (max u v)
 for additive actions. Then implement AddAction for the Rotation type.
 -/
 
+def add_rot_state : Rotation → State → State
+| r0, s => s
+| r120, s0 => s120
+| r120, s120 => s240
+| r120, s240 => s0
+| r240, s0 => s240
+| r240, s120 => s0
+| r240, s240 => s120
+
+instance : VAdd Rotation State := ⟨ add_rot_state ⟩
+
+instance : AddAction Rotation State := { zero_vadd := sorry, add_vadd := sorry }
+
+#eval r240 +ᵥ r120
 
 
 /-!
