@@ -425,6 +425,16 @@ def sub_State : State → State → Rotation
 | s240, s240 => r0
 
 
+
+/-!
+Lucture notes
+-/
+
+#check AddTorsor
+
+
+
+
 /-!
 Homework #1: Endow Rotation with the additional structure of an additive group.
 -/
@@ -453,6 +463,100 @@ SubNegMonoid G
 -/
 
 /-!
+#### AddMonoid
+we have already done before
+-/
+
+
+
+/-!
+#### Neg
+-/
+#check Neg
+/-!
+class Neg (α : Type u) where
+  /-- `-a` computes the negative or opposite of `a`.
+  The meaning of this notation is type-dependent. -/
+  neg : α → α
+-/
+
+def neg_Rotations : Rotation → Rotation
+| r0 => r0
+| r120 => r240
+| r240 => r120
+
+instance : Neg Rotation := { neg := neg_Rotations }
+
+
+
+/-!
+#### Sub
+-/
+#check Sub
+/-!
+/-- The homogeneous version of `HSub`: `a - b : α` where `a b : α`. -/
+class Sub (α : Type u) where
+  /-- `a - b` computes the difference of `a` and `b`. See `HSub`. -/
+  sub : α → α → α
+-/
+
+def sub_Rotations : Rotation → Rotation → Rotation
+| r0, r => -r
+| r, r0 => r
+| r120, r120 => r0
+| r120, r240 => -r120
+| r240, r120 => r120
+| r240, r240 => r0
+
+instance : Sub Rotation := { sub := sub_Rotations }
+
+
+
+/-!
+#### SubNegMonoid
+-/
+
+instance : SubNegMonoid Rotation := {
+  sub_eq_add_neg := sorry,
+  zsmul_zero' := sorry,
+  zsmul_succ' := sorry,
+  zsmul_neg' := sorry,
+}
+
+
+
+/-!
+#### AddGroup
+-/
+
+instance : AddGroup Rotation := {
+  add_left_neg := sorry,
+}
+
+
+
+/-!
+       Test
+-/
+
+#reduce -r120 + r120  -- Should reduce to r0
+#reduce -r240 + r240  -- Should reduce to r0
+#reduce -r0 + r0      -- Should reduce to r0
+#reduce -r120 + r0      -- Should reduce to r240
+#reduce -r120 + r240      -- Should reduce to r120
+#reduce -r120 + -r120      -- Should reduce to r120
+
+#reduce r120 - r240   -- Should reduce to r240
+#reduce r240 - r120   -- Should reduce to r120
+#reduce r120 - r0     -- Should reduce to r120
+#reduce r120 - r240     -- Should reduce to -r120 ??? or r240 ???
+#reduce r0 - r120     -- Should reduce to -r120 (negation) ? or r120 ???
+#reduce r120 - (-r240 + r120)    -- precedences are also set right
+
+
+
+
+/-!
 Homework #2: Endow State and Rotation with the additional structure of an
 additive torsor over that (additive) group.
 -/
@@ -460,15 +564,81 @@ additive torsor over that (additive) group.
 -- Hint: follow the same approach
 
 
+#check AddTorsor.mk
+/-!
+class AddTorsor
+  (G : outParam (Type*))
+  (P : Type*)
+  [outParam <| AddGroup G]
+  [toAddAction : AddAction G P]
+  [toVSub : VSub G P]
+  [nonempty : Nonempty P]
+  vsub_vadd' : ∀ p1 p2 : P, (p1 -ᵥ p2 : G) +ᵥ p2 = p1
+  vadd_vsub' : ∀ (g : G) (p : P), g +ᵥ p -ᵥ p = g
+#align add_torsor AddTorsor
+-/
+
+/-!
+#### AddGroup
+We already have this done before
+-/
 
 
 
+/-!
+#### AddAction
+We already have this done before
+-/
+
+
+
+/-!
+#### VSub
+-/
+#check VSub
+/-!
+class VSub (G : outParam (Type*)) (P : Type*) where
+  vsub : P → P → G
+-/
+
+instance : VSub Rotation State := ⟨ sub_State ⟩
 
 
 
 
 /-!
-Lucture notes
+#### Nonempty
+-/
+#check Nonempty
+/-!
+class inductive Nonempty (α : Sort u) : Prop where
+  | intro (val : α) : Nonempty α
 -/
 
-#check AddTorsor
+instance : Nonempty State := ⟨ State.s0 ⟩
+instance : Nonempty Rotation := ⟨ Rotation.r0 ⟩
+
+
+/-!
+#### AddTorsor
+-/
+
+instance : AddTorsor Rotation State := {
+  vsub_vadd' := sorry,
+  vadd_vsub' := sorry
+}
+
+
+
+/-!
+        Test
+-/
+
+#reduce (s120 -ᵥ s0) +ᵥ s0    -- Should reduce to s120
+#reduce (s240 -ᵥ s0) +ᵥ s0    -- Should reduce to s240
+#reduce (s120 -ᵥ s240) +ᵥ s240 -- Should reduce to s0
+#reduce (s0 -ᵥ s120) +ᵥ s120   -- Should reduce to s240
+#reduce (r120 -ᵥ r0) +ᵥ r0    -- Should reduce to r120
+#reduce (r240 -ᵥ r0) +ᵥ r0    -- Should reduce to r240
+#reduce (r120 -ᵥ r240) +ᵥ r240 -- Should reduce to r0
+#reduce (r0 -ᵥ r120) +ᵥ r120   -- Should reduce to -r120 (negation)
