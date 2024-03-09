@@ -636,9 +636,9 @@ instance : AddTorsor Rotation State := {
 
 #reduce (s120 -ᵥ s0) +ᵥ s0    -- Should reduce to s120
 #reduce (s240 -ᵥ s0) +ᵥ s0    -- Should reduce to s240
-#reduce (s120 -ᵥ s240) +ᵥ s240 -- Should reduce to s0
-#reduce (s0 -ᵥ s120) +ᵥ s120   -- Should reduce to s240
+#reduce (s120 -ᵥ s240) +ᵥ s240 -- Should reduce to s120
+#reduce (s0 -ᵥ s120) +ᵥ s120   -- Should reduce to s0
 #reduce (r120 -ᵥ r0) +ᵥ r0    -- Should reduce to r120
 #reduce (r240 -ᵥ r0) +ᵥ r0    -- Should reduce to r240
-#reduce (r120 -ᵥ r240) +ᵥ r240 -- Should reduce to r0
-#reduce (r0 -ᵥ r120) +ᵥ r120   -- Should reduce to -r120 (negation)
+#reduce (r120 -ᵥ r240) +ᵥ r240 -- Should reduce to r120
+#reduce (r0 -ᵥ r120) +ᵥ r120   -- Should reduce to r0
