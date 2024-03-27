@@ -125,3 +125,55 @@ example : B ∨ K → B :=
 λ bork => match bork with
 | Or.inl b => b
 | Or.inr k => nomatch k
+
+
+-- and A
+-- intro
+-- elim
+
+-- intro
+
+-- elim
+example : B ∧ M → M := λ bm => bm.right
+example : B ∧ M → M := λ bm => bm.1
+
+-- example
+theorem foo : B ∧ Not k := ⟨  ⟩
+
+
+-- Or
+-- intro
+-- elim
+
+-- intro
+example : B ∨ K := Or.inl B.paid
+
+
+-- elim example
+example : B ∨ K → B :=
+λ bork => match bork with
+| Or.inl b => b
+| Or.inl k => nomatch k
+
+
+example :
+  ∀ (Raining Sptrinkling Wet : Prop),
+    (Raining ∨ Sptrinkling) →
+    (Raining → Wet) →
+    (Sptrinkling → Wet) →
+    Wet :=
+λ R S W rors rw sp =>
+match rors with
+| Or.inl r => rw r
+| Or.inl s => sp s
+
+-- Not
+-- intro
+-- elim
+
+-- intro
+def notK : ¬K := λ k => nomatch k
+
+-- elim example (law of no contradiction example)
+example (P : Prop) : ¬P → P → False :=
+λ np p => np p

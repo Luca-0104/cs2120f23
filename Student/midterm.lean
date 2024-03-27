@@ -645,3 +645,45 @@ instance : AddTorsor Rotation State := {
 #reduce (r240 -ᵥ r0) +ᵥ r0    -- Should reduce to r240
 #reduce (r120 -ᵥ r240) +ᵥ r240 -- Should reduce to r120
 #reduce (r0 -ᵥ r120) +ᵥ r120   -- Should reduce to r0
+
+
+-- ------------------------------------------------------------------
+-- ------------------------------------------------------------------
+-- ------------------------------------------------------------------
+-- ------------------------------------------------------------------
+-- new lecture notes
+
+
+-- theorem rot_add_assoc:
+-- ∀ (a b c : Rotation), (a + b) + c = a + (b + c)
+-- | r0, b, c => match b with
+--   | r0 => match c with
+--     | r0 => rfl(r0 + r0 + r0 = r0 + (r0 + r0))
+--     | r120 => rfl(r0 + r0 + r120 = r0 + (r0 + r120))
+--     | r340 => rfl(r0 + r0 + r240 = r0 + (r0 + r240))
+
+
+theorem rot_add_assoc':
+∀ (a b c : Rotation), (a + b) + c = a + (b + c) :=
+by
+  intros a b c
+  cases a
+  repeat {
+    cases b
+    repeat {
+      cases c
+      repeat{rfl}
+    }
+  }
+
+theorem rot_add_zero:
+∀ (a : Rotation), 0 + a = a :=
+by
+  intros a
+  cases a
+  repeat{rfl}
+
+-- theorem th_indction:
+-- ∀ (p : Nat) →
+-- by
+--   induction
