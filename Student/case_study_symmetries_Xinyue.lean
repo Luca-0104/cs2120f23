@@ -5,11 +5,11 @@ import Mathlib.Algebra.AddTorsor
 /-!
 # HOMEWORK: Monoids, Groups, and Torsors in Lean
 
-Here's a stripped down version of the mathematical
+Here's a stripped down version of the mathematical 
 structure we've been developing in class. By the end
-of this file, we will have constructed a torsor of
+of this file, we will have constructed a torsor of 
 states over a group of rotations (namely rotations
-that leave the transformed shape lying right on
+that leave the transformed shape lying right on 
 top of the untransformed input).
 -/
 
@@ -31,7 +31,7 @@ inductive State
 
 There are three actions that can be applied to a triangle
 state, taking it to a new state through a rotation by the
-one of the give angles (in degrees).
+one of the give angles (in degrees). 
 -/
 inductive Rotation
 | r0
@@ -62,7 +62,7 @@ example : r0 = 0 := rfl   -- r0 and 0 mean the same thing (are equal)
 /-!
 ### AddMonoid
 
-We'll define a rotation addition function and then use it as
+We'll define a rotation addition function and then use it as 
 the generic addition function for Rotation values.
 -/
 
@@ -90,12 +90,12 @@ instance : Add Rotation := { add := add_Rotations }   -- using {} notation
 ## AddSemigroup
 
 We need to instantiate AddSemigroup for the Rotation type.
-For that we need a proof that rotation addition is associative.
+For that we need a proof that rotation addition is associative. 
 -/
 
 -- explicit exhaustive case analysis
 example : ∀ a b c : Rotation, a + b + c = a + (b + c) :=
-λ a b c =>
+λ a b c => 
 match a with
 | r0 => match b with
   | r0 => match c with
@@ -105,11 +105,11 @@ match a with
   | r120 => match c with
     | r0 => rfl
     | r120 => rfl
-    | r240 => rfl
+    | r240 => rfl 
   | r240 => match c with
     | r0 => rfl
     | r120 => rfl
-    | r240 => rfl
+    | r240 => rfl 
 | r120 => match b with
   | r0 => match c with
     | r0 => rfl
@@ -118,11 +118,11 @@ match a with
   | r120 => match c with
     | r0 => rfl
     | r120 => rfl
-    | r240 => rfl
+    | r240 => rfl 
   | r240 => match c with
     | r0 => rfl
     | r120 => rfl
-    | r240 => rfl
+    | r240 => rfl 
 | r240 => match b with
   | r0 => match c with
     | r0 => rfl
@@ -131,17 +131,17 @@ match a with
   | r120 => match c with
     | r0 => rfl
     | r120 => rfl
-    | r240 => rfl
+    | r240 => rfl 
   | r240 => match c with
     | r0 => rfl
     | r120 => rfl
-    | r240 => rfl
+    | r240 => rfl 
 
 -- a more concise tactic script that constructs the same proof object
 theorem rot_add_assoc : ∀ a b c : Rotation, a + b + c = a + (b + c) :=
-by
+by 
   intros a b c
-  cases a
+  cases a 
   repeat {
     cases b
     repeat {
@@ -155,23 +155,23 @@ instance : AddSemigroup Rotation := { add_assoc := rot_add_assoc }
 /-!
 ## AddMonoid
 -/
-
-example : ∀ (a : Rotation), 0 + a = a
+--0327
+example : ∀ (a : Rotation), 0 + a = a 
 | r0 => rfl
 | r120 => rfl
 | r240 => rfl
 
 theorem rot_zero_add : ∀ (a : Rotation), 0 + a = a :=
-by
+by 
   intros a
-  cases a
-  repeat{rfl}
+  cases a 
+  repeat { rfl }
 
 theorem rot_add_zero : ∀ (a : Rotation), a + 0 = a :=
-by
+by 
   intros a
-  cases a
-  repeat{rfl}
+  cases a 
+  repeat { rfl }
 
 instance : AddMonoid Rotation := {
   zero_add := rot_zero_add
@@ -187,10 +187,10 @@ instance : AddMonoid Rotation := {
 
 /-!
 An additive action should be thought of in a general
-sense as the addition of a vector-like object (such
+sense as the addition of a vector-like object (such 
 as a rotation) to a point-like object (such as a state)
 yielding a new state. For example, in a Euclidean space
-if we have a vector, v = (3,1) and a point p = (2,3)
+if we have a vector, v = (3,1) and a point p = (2,3) 
 then the action of v on p "moves" the point from (2,3)
 to (3+2,1+3) = (5,4). In our simpler space, rotations
 are actions and states are points, and the action is
@@ -220,23 +220,22 @@ instance : VAdd Rotation State := ⟨ vadd_rot_state ⟩
 
 
 /-!
-## AddAction
+## AddAction 
 -/
-
+--0327
 theorem rot_zero_vadd : ∀ (p : State), (0 : Rotation) +ᵥ p = p :=
 by
   intros p
   cases p
-  repeat { rfl }
-
+  repeat {rfl}
 
 theorem rot_add_vadd : ∀ (g₁ g₂ : Rotation) (p : State), g₁ + g₂ +ᵥ p = g₁ +ᵥ (g₂ +ᵥ p) :=
 by
-  intros g₁ g₂ p
-  cases g₁
-  repeat {
-    cases g₂
-    repeat {
+  intros g1 g2 p
+  cases g1
+  repeat{
+    cases g2
+    repeat{
       cases p
       repeat {rfl}
     }
@@ -268,7 +267,7 @@ of the negation of an action as an "undo" in the sense that
 applying an action then applying its inverse leaves the target
 in its initial state.
 
-Can we define a sensible additive inverse operator for
+Can we define a sensible additive inverse operator for 
 rotations?Sure, the inverse of any rotation is just another rotation so that
 when you add the two of them together you get back to the identity
 (as already defined by the monoid structure).
@@ -307,7 +306,7 @@ Remeber that the items in curly or square
 brackets are implicit type and instance values
 that we don't have to provide explicitly. And
 moreover, we have default values for everything
-from sub_eq_add_neg on down. Once we have all
+from sub_eq_add_neg on down. Once we have all 
 requisite parts, we'll instantiate SubNegMonoid
 without having to explicitly specify and of its
 fields. All arguments are implicit or defaulted.
@@ -319,7 +318,7 @@ SubNegMonoid.mk.{u}
   [toAddMonoid : AddMonoid G]
   [toNeg : Neg G]
   [toSub : Sub G]
-  (sub_eq_add_neg : ∀ (a b : G), a - b = a + -b := by intros; rfl)
+  (sub_eq_add_neg : ∀ (a b : G), a - b = a + -b := by intros; rfl) 
   (zsmul : ℤ → G → G)
   (zsmul_zero' : ∀ (a : G), zsmul 0 a = 0 := by intros; rfl)
   (zsmul_succ' : ∀ (n : ℕ) (a : G), zsmul (Int.ofNat (Nat.succ n)) a = a + zsmul (Int.ofNat n) a := by intros; rfl)
@@ -363,18 +362,17 @@ instance : Sub Rotation := { sub := λ r2 r1 => r2 + -r1 }
 /-!
 Having analzed the AddGroup typeclass in Lean, we
 know that to instantiate it, we need to have an instance
-of SubNegMonoid, an AddMonoid with unary - and binary -
+of SubNegMonoid, an AddMonoid with unary - and binary - 
 operations with sub_eq_add_neg : ∀ a b, a - b = a + -b.
 -/
-theorem rot_sub_eq_add_neg : ∀ (a b : Rotation), a - b = a + -b :=
-by
+theorem rot_sub_eq_add_neg: ∀ (a b : Rotation), a-b=a+-b:=
+by 
   intros a b
   cases a
-  repeat {
+  repeat{
     cases b
-    repeat { rfl }
+    repeat {rfl}
   }
-
 instance : SubNegMonoid Rotation := {
   sub_eq_add_neg := rot_sub_eq_add_neg
 }
@@ -382,20 +380,20 @@ instance : SubNegMonoid Rotation := {
 /-!
 ## AddGroup
 
-And with all that, we can now define a *group structure*
+And with all that, we can now define a *group structure* 
 on symmetry rotations of a triangle. All we have to add is
-a proof that inverses work behave as we expect them to:
+a proof that inverses work behave as we expect them to: 
 ∀ (a : Rotation), -a + a = 0.
 -/
-
+--0327
 theorem rot_add_neg_left : ∀ (a : Rotation), -a + a = 0 :=
 by
   intros a
   cases a
-  repeat { rfl }
+  repeat {rfl}
 
 
-instance : AddGroup Rotation := ⟨ rot_add_neg_left ⟩
+instance : AddGroup Rotation := ⟨ rot_add_neg_left ⟩ 
 
 #reduce -4 • r120 + 3 • r240 - 6 • r240
 
@@ -406,7 +404,7 @@ instance : AddGroup Rotation := ⟨ rot_add_neg_left ⟩
 And finally (for now) we come to defining a structure
 on states and rotations that we can refer to as a torsor
 (of symmetries of an equilateral triangle) over a group
-(of symmetry-preserving rotations)
+(of symmetry-preserving rotations) 
 -/
 
 #check AddTorsor.mk
@@ -423,11 +421,11 @@ class AddTorsor (G : outParam (Type*)) (P : Type*) [outParam <| AddGroup G] exte
 The set of points can't be empty.
 -/
 
-instance : Nonempty State := ⟨ s0 ⟩
+instance : Nonempty State := ⟨ s0 ⟩ 
 
 /-
 Definition of subtraction of States yielding
-rotations.
+rotations. 
 -/
 
 def sub_State : State → State → Rotation
@@ -447,7 +445,7 @@ def sub_State : State → State → Rotation
 class VSub (G : outParam (Type*)) (P : Type*) where
   vsub : P → P → G
 -/
-
+--0327
 instance : VSub Rotation State := { vsub := sub_State }
 
 theorem rot_state_vsub_vadd' : ∀ (p1 p2 : State), p1 -ᵥ p2 +ᵥ p2 = p1 :=
@@ -456,32 +454,33 @@ by
   cases p1
   repeat {
     cases p2
-    repeat { rfl }
+    repeat {rfl}
   }
-
+  
 theorem rot_state_vadd_vsub' : ∀ (g : Rotation) (p : State), g +ᵥ p -ᵥ p = g :=
 by
   intros g p
   cases g
   repeat {
     cases p
-    repeat { rfl }
+    repeat {rfl}
   }
+  
 
 #reduce s0 -ᵥ s0 +ᵥ s0 = s0
-
+--0327
 def rot_st_vsub_vadd' : ∀ (p1 p2 : State), p1 -ᵥ p2 +ᵥ p2 = p1 :=
 by
   intros p1 p2
   cases p1
   repeat {
     cases p2
-    repeat { rfl }
+    repeat {rfl}
   }
 
 
-instance : AddTorsor Rotation State :=
-{
+instance : AddTorsor Rotation State := 
+{ 
   vsub_vadd' := rot_st_vsub_vadd'
   vadd_vsub' := rot_state_vadd_vsub'
 }
@@ -496,11 +495,11 @@ final state of s120.
 #reduce (r120 + (s240 -ᵥ s120)) +ᵥ s240
 
 /-!
-So yay! We've now defined what a mathematician would
+So yay! We've now defined what a mathematician would 
 call a torsor of points (states in the form of three
-symmetry-preserving rotational angles of a triangle)
+symmetry-preserving rotational angles of a triangle) 
 over a group of actions (rotations by multiples of the
-"unit" rotation, r120).
+"unit" rotation, r120). 
 -/
 
 example : r0 = 0 • r120 := rfl
@@ -512,12 +511,12 @@ example : ∀ (r : Rotation), 3 • r = 0   -- interesting
 | r240 => rfl
 
 /-!
-Can you see something in the preceding examples
+Can you see something in the preceding examples 
 that would lead you to doubt that we can turn our
 torsor into a vector space? We have something close
 to a vector space, with r120 as a unit vector, and
 scalar multiplication supported. Moreover these
 vector-like things act in the "right" ways on our
 states. But still, we don't have a vector space.
-Yet.
+Yet.  
 -/
